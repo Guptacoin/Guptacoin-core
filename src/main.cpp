@@ -770,9 +770,13 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 
 	if (tx.IsCoinBase())
 	{
-		if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
+		// The coinbase in the genesis block will fail this check due to the large size of the scriptSig (which is 104)
+		if (tx.GetHash() != uint256("0xa49b103136f2ec85945c0a731d507549c026cb4ba84f418e5b42351a350f9407"))
+		    {
+		    if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
 			return state.DoS(100, error("CheckTransaction() : coinbase script size"),
 					REJECT_INVALID, "bad-cb-length");
+		    }
 	}
 	else
 	{

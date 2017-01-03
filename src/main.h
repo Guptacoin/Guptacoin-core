@@ -34,7 +34,7 @@ class CBloomFilter;
 class CInv;
 
 const int64_t nDiffChangeTarget = 5; // Patch effective @ block 5
-const int64_t multiAlgoDiffChangeTarget = 225000; // block 225000 where multi-algo work weighting starts 225000
+const int64_t multiAlgoDiffChangeTarget = 0; // multi-algo starts from genesis
 /*const int64_t workComputationChangeTarget2 = multiAlgoDiffChangeTarget+2*365*24*3600/15;//2 years,
 const int64_t workComputationChangeTarget4 = workComputationChangeTarget2+2*365*24*3600/15;//4 years,
 const int64_t workComputationChangeTarget6 = workComputationChangeTarget4+2*365*24*3600/15;//6 years,
