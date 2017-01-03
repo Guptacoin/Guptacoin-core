@@ -56,8 +56,8 @@ public:
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
         genesis.nTime    = 1483350149;
-        genesis.nBits    = Params().ProofOfWorkLimit(ALGO_SCRYPT).GetCompact();
-        //genesis.nBits = 0x1e0fffff;
+        //genesis.nBits    = Params().ProofOfWorkLimit(ALGO_SCRYPT).GetCompact();
+        genesis.nBits = 0x1e0ffff0;
         genesis.nNonce   = 2061560;
 
         hashGenesisBlock = genesis.GetHash();
