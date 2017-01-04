@@ -37,7 +37,7 @@ Value getinfo(const Array& params, bool fHelp)
             "  \"version\": xxxxx,           (numeric) the server version\n"
             "  \"protocolversion\": xxxxx,   (numeric) the protocol version\n"
             "  \"walletversion\": xxxxx,     (numeric) the wallet version\n"
-            "  \"balance\": xxxxxxx,         (numeric) the total auroracoin balance of the wallet\n"
+            "  \"balance\": xxxxxxx,         (numeric) the total guptacoin balance of the wallet\n"
             "  \"blocks\": xxxxxx,           (numeric) the current number of blocks processed in the server\n"
             "  \"timeoffset\": xxxxx,        (numeric) the time offset\n"
             "  \"connections\": xxxxx,       (numeric) the number of connections\n"
@@ -135,14 +135,14 @@ Value validateaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "validateaddress \"auroracoinaddress\"\n"
-            "\nReturn information about the given auroracoin address.\n"
+            "validateaddress \"guptacoinaddress\"\n"
+            "\nReturn information about the given guptacoin address.\n"
             "\nArguments:\n"
-            "1. \"auroracoinaddress\"     (string, required) The auroracoin address to validate\n"
+            "1. \"guptacoinaddress\"     (string, required) The guptacoin address to validate\n"
             "\nResult:\n"
             "{\n"
             "  \"isvalid\" : true|false,            (boolean) If the address is valid or not. If not, this is the only property returned.\n"
-            "  \"address\" : \"auroracoinaddress\", (string) The auroracoin address validated\n"
+            "  \"address\" : \"guptacoinaddress\", (string) The guptacoin address validated\n"
             "  \"ismine\" : true|false,             (boolean) If the address is yours or not\n"
             "  \"isscript\" : true|false,           (boolean) If the key is a script\n"
             "  \"pubkey\" : \"publickeyhex\",       (string) The hex value of the raw public key\n"
@@ -246,9 +246,9 @@ Value createmultisig(const Array& params, bool fHelp)
 
             "\nArguments:\n"
             "1. nrequired      (numeric, required) The number of required signatures out of the n keys or addresses.\n"
-            "2. \"keys\"       (string, required) A json array of keys which are auroracoin addresses or hex-encoded public keys\n"
+            "2. \"keys\"       (string, required) A json array of keys which are guptacoin addresses or hex-encoded public keys\n"
             "     [\n"
-            "       \"key\"    (string) auroracoin address or hex-encoded public key\n"
+            "       \"key\"    (string) guptacoin address or hex-encoded public key\n"
             "       ,...\n"
             "     ]\n"
 
@@ -283,10 +283,10 @@ Value verifymessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 3)
         throw runtime_error(
-            "verifymessage \"auroracoinaddress\" \"signature\" \"message\"\n"
+            "verifymessage \"guptacoinaddress\" \"signature\" \"message\"\n"
             "\nVerify a signed message\n"
             "\nArguments:\n"
-            "1. \"auroracoinaddress\"  (string, required) The auroracoin address to use for the signature.\n"
+            "1. \"guptacoinaddress\"  (string, required) The guptacoin address to use for the signature.\n"
             "2. \"signature\"          (string, required) The signature provided by the signer in base 64 encoding (see signmessage).\n"
             "3. \"message\"            (string, required) The message that was signed.\n"
             "\nResult:\n"

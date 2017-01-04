@@ -914,7 +914,7 @@ static std::string FormatException(std::exception* pex, const char* pszThread)
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "auroracoin";
+    const char* pszModule = "guptacoin";
 #endif
     if (pex)
         return strprintf(
@@ -941,10 +941,10 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Auroracoin
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\Auroracoin
-    // Mac: ~/Library/Application Support/Auroracoin
-    // Unix: ~/.auroracoin
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Guptacoin
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\Guptacoin
+    // Mac: ~/Library/Application Support/Guptacoin
+    // Unix: ~/.guptacoin
 #ifdef WIN32
     // Windows
     return GetSpecialFolderPath(CSIDL_APPDATA) / "guptacoin";
@@ -1044,7 +1044,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 
 boost::filesystem::path GetPidFile()
 {
-    boost::filesystem::path pathPidFile(GetArg("-pid", "auroracoind.pid"));
+    boost::filesystem::path pathPidFile(GetArg("-pid", "guptacoind.pid"));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }
@@ -1277,7 +1277,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nTime)
                 if (!fMatch)
                 {
                     fDone = true;
-                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong Auroracoin will not work properly.");
+                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong Guptacoin will not work properly.");
                     strMiscWarning = strMessage;
                     LogPrintf("*** %s\n", strMessage);
                     uiInterface.ThreadSafeMessageBox(strMessage, "", CClientUIInterface::MSG_WARNING);

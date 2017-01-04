@@ -29,7 +29,7 @@ using namespace std;
 using namespace boost;
 
 #if defined(NDEBUG)
-# error "Auroracoin cannot be compiled without assertions."
+# error "Guptacoin cannot be compiled without assertions."
 #endif
 
 //
@@ -3680,9 +3680,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
 			pfrom->cleanSubVer = SanitizeString(pfrom->strSubVer);
 
 			if (
-					(pfrom->cleanSubVer == "/Aurora:1.3.0/") ||
-					(pfrom->cleanSubVer == "/Arngrímur Jónsson:0.8.7.5/") ||
-					(pfrom->cleanSubVer == "/Satoshi:0.8.7.5/")
+					(pfrom->cleanSubVer == "/Guptacoin:1.3.0/")
 			)
 			{
 				// disconnect from peers older than this proto version

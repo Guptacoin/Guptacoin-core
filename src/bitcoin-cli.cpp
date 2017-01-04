@@ -31,11 +31,11 @@ static bool AppInitRPC(int argc, char* argv[])
     if (argc<2 || mapArgs.count("-?") || mapArgs.count("--help"))
     {
         // First part of help message is specific to RPC client
-        std::string strUsage = _("Auroracoin Core RPC client version") + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = _("Guptacoin Core RPC client version") + " " + FormatFullVersion() + "\n\n" +
             _("Usage:") + "\n" +
-              "  auroracoin-cli [options] <command> [params]  " + _("Send command to Auroracoin Core") + "\n" +
-              "  auroracoin-cli [options] help                " + _("List commands") + "\n" +
-              "  auroracoin-cli [options] help <command>      " + _("Get help for a command") + "\n";
+              "  guptacoin-cli [options] <command> [params]  " + _("Send command to Guptacoin Core") + "\n" +
+              "  guptacoin-cli [options] help                " + _("List commands") + "\n" +
+              "  guptacoin-cli [options] help <command>      " + _("Get help for a command") + "\n";
 
         strUsage += "\n" + HelpMessageCli(true);
 
