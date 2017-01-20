@@ -870,79 +870,84 @@ void static GenericMiner(CWallet *pwallet, int algo)
 
       auto_ptr<CBlockTemplate> pblocktemplate(CreateNewBlockWithKey(reservekey, algo));
       if (!pblocktemplate.get())
-      return;
-      CBlock *pblock = &pblocktemplate->block;
-      IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
-
-      LogPrintf("Running %s miner with %u transactions in block (%u bytes)\n",
-      GetAlgoName(algo).c_str(),
-      pblock->vtx.size(),
-      ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
-
-      //
-      // Search
-      //
-      uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
-      int64_t nStart = GetTime();
-      uint256 hash;
-      while(true)
       {
-        hash = pblock->GetPoWHash(algo);
-        if (hash <= hashTarget){
-          SetThreadPriority(THREAD_PRIORITY_NORMAL);
+        MilliSleep(1000);
+      }
+      else
+      {
+        CBlock *pblock = &pblocktemplate->block;
+        IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-          LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
-          pblock->print();
+        LogPrintf("Running %s miner with %u transactions in block (%u bytes)\n",
+        GetAlgoName(algo).c_str(),
+        pblock->vtx.size(),
+        ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
-          CheckWork(pblock, *pwallet, reservekey);
-          SetThreadPriority(THREAD_PRIORITY_LOWEST);
-          break;
-        }
-        ++pblock->nNonce;
-
-        // Meter hashes/sec
-        static int64_t nHashCounter;
-        if (nHPSTimerStart == 0)
+        //
+        // Search
+        //
+        uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
+        int64_t nStart = GetTime();
+        uint256 hash;
+        while(true)
         {
-          nHPSTimerStart = GetTimeMillis();
-          nHashCounter = 0;
-        }
-        else
-        nHashCounter += 1;
-        if (GetTimeMillis() - nHPSTimerStart > 4000)
-        {
-          static CCriticalSection cs;
+          hash = pblock->GetPoWHash(algo);
+          if (hash <= hashTarget){
+            SetThreadPriority(THREAD_PRIORITY_NORMAL);
+
+            LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex().c_str(), hashTarget.GetHex().c_str());
+            pblock->print();
+
+            CheckWork(pblock, *pwallet, reservekey);
+            SetThreadPriority(THREAD_PRIORITY_LOWEST);
+            break;
+          }
+          ++pblock->nNonce;
+
+          // Meter hashes/sec
+          static int64_t nHashCounter;
+          if (nHPSTimerStart == 0)
           {
-            LOCK(cs);
-            if (GetTimeMillis() - nHPSTimerStart > 4000)
+            nHPSTimerStart = GetTimeMillis();
+            nHashCounter = 0;
+          }
+          else
+          nHashCounter += 1;
+          if (GetTimeMillis() - nHPSTimerStart > 4000)
+          {
+            static CCriticalSection cs;
             {
-              dHashesPerSec = 1000.0 * nHashCounter / (GetTimeMillis() - nHPSTimerStart);
-              nHPSTimerStart = GetTimeMillis();
-              nHashCounter = 0;
-              static int64_t nLogTime;
-              if (GetTime() - nLogTime > 30 * 60)
+              LOCK(cs);
+              if (GetTimeMillis() - nHPSTimerStart > 4000)
               {
-                nLogTime = GetTime();
-                LogPrintf("hashmeter %6.0f khash/s\n", dHashesPerSec/1000.0);
+                dHashesPerSec = 1000.0 * nHashCounter / (GetTimeMillis() - nHPSTimerStart);
+                nHPSTimerStart = GetTimeMillis();
+                nHashCounter = 0;
+                static int64_t nLogTime;
+                if (GetTime() - nLogTime > 30 * 60)
+                {
+                  nLogTime = GetTime();
+                  LogPrintf("hashmeter %6.0f khash/s\n", dHashesPerSec/1000.0);
+                }
               }
             }
           }
+
+          // Check for stop or if block needs to be rebuilt
+          boost::this_thread::interruption_point();
+          if (vNodes.empty())
+          break;
+          if (++pblock->nNonce >= 0xffff0000)
+          break;
+          if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
+          break;
+          if (pindexPrev != chainActive.Tip())
+          break;
+
+          // Update nTime every few seconds
+          UpdateTime(*pblock, pindexPrev);
+          // nBlockTime = ByteReverse(pblock->nTime);
         }
-
-        // Check for stop or if block needs to be rebuilt
-        boost::this_thread::interruption_point();
-        if (vNodes.empty())
-        break;
-        if (++pblock->nNonce >= 0xffff0000)
-        break;
-        if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
-        break;
-        if (pindexPrev != chainActive.Tip())
-        break;
-
-        // Update nTime every few seconds
-        UpdateTime(*pblock, pindexPrev);
-        // nBlockTime = ByteReverse(pblock->nTime);
       }
     }
   }
