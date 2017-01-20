@@ -1504,23 +1504,6 @@ static unsigned int GetNextWorkRequiredMULTI(const CBlockIndex* pindexLast, cons
 
 
 unsigned int GetNextWorkRequired(const CBlockIndex * pindexLast, const CBlockHeader * pblock, int algo){
-    int DiffMode = 1;
-
-    if (pindexLast->nHeight+1 <= 5400) { DiffMode = 1;
-      } else if (pindexLast->nHeight + 1 <= multiAlgoDiffChangeTarget) {
-        DiffMode = 2;
-      } else {
-        DiffMode = 3;
-      }
-
-    if (DiffMode == 1) {
-        return GetNextWorkRequired_Original(pindexLast, pblock, algo);
-    } else if (DiffMode == 2) {
-        return GetNextWorkRequired_KGW(pindexLast, pblock, algo);
-    } else if (DiffMode == 3) {
-        return GetNextWorkRequiredMULTI(pindexLast, pblock, algo);
-    }
-
     return GetNextWorkRequiredMULTI(pindexLast, pblock, algo);
 }
 
