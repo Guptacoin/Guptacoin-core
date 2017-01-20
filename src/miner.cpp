@@ -424,7 +424,11 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, int algo)
     CCoinsViewCache viewNew(*pcoinsTip, true);
     CValidationState state;
     if (!ConnectBlock(*pblock, state, &indexDummy, viewNew, true))
-    throw std::runtime_error("CreateNewBlock() : ConnectBlock failed");
+    {
+    //throw std::runtime_error("CreateNewBlock() : ConnectBlock failed");
+    LogPrintf("CreateNewBlock() : ConnectBlock failed\n");
+    return NULL;
+    }
   }
 
   return pblocktemplate.release();
@@ -723,7 +727,7 @@ void static BitcoinMiner(CWallet *pwallet)
     }
   }
 
-  void static ScryptMiner(CWallet *pwallet)
+void static ScryptMiner(CWallet *pwallet)
   {
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
@@ -848,7 +852,7 @@ void static BitcoinMiner(CWallet *pwallet)
     }
   }
 
-  void static GenericMiner(CWallet *pwallet, int algo)
+void static GenericMiner(CWallet *pwallet, int algo)
   {
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
@@ -943,7 +947,7 @@ void static BitcoinMiner(CWallet *pwallet)
     }
   }
 
-  void static ThreadBitcoinMiner(CWallet *pwallet)
+void static ThreadBitcoinMiner(CWallet *pwallet)
   {
     LogPrintf("Guptacoin miner started\n");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
