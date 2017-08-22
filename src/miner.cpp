@@ -968,35 +968,41 @@ void static ThreadBitcoinMiner(CWallet *pwallet)
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("bitcoin-miner");
 
-    try
+    while(true)
     {
-      switch (miningAlgo)
-      {
-        case ALGO_SHA256D:
-        BitcoinMiner(pwallet);
-        break;
-        case ALGO_SCRYPT:
-        ScryptMiner(pwallet);
-        break;
-        case ALGO_GROESTL:
-        GenericMiner(pwallet, ALGO_GROESTL);
-        break;
-        case ALGO_SKEIN:
-        GenericMiner(pwallet, ALGO_SKEIN);
-        break;
-        case ALGO_QUBIT:
-        GenericMiner(pwallet, ALGO_QUBIT);
-        break;
-      }
-    }
-    catch (boost::thread_interrupted)
-    {
-      LogPrintf("Guptacoin miner terminated\n");
-      throw;
+        try
+        {
+          switch (miningAlgo)
+          {
+            case ALGO_SHA256D:
+            BitcoinMiner(pwallet);
+            break;
+            case ALGO_SCRYPT:
+            ScryptMiner(pwallet);
+            break;
+            case ALGO_GROESTL:
+            GenericMiner(pwallet, ALGO_GROESTL);
+            break;
+            case ALGO_SKEIN:
+            GenericMiner(pwallet, ALGO_SKEIN);
+            break;
+            case ALGO_QUBIT:
+            GenericMiner(pwallet, ALGO_QUBIT);
+            break;
+          }
+        }
+        catch (boost::thread_interrupted)
+        {
+          LogPrintf("Guptacoin miner terminated\n");
+          throw;
+        }
+        /* Something caused the mining too stop, wait for one block time */
+        /* and start again. */
+        boost::this_thread::sleep_for(boost::chrono::seconds(60));
     }
   }
 
-  void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads)
+void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads)
   {
     static boost::thread_group* minerThreads = NULL;
 
